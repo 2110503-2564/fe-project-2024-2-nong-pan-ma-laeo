@@ -1,3 +1,4 @@
+"use client"
 import styles from './topmenu.module.css'
 import Link from 'next/link'
 

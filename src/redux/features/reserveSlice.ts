@@ -1,10 +1,21 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
 
 type ReserveState = {
     reserveItems: ReservationItem[];
 };
 
 const initialState: ReserveState = { reserveItems: [] };
+
+export const fetchReservations = createAsyncThunk(
+    "reserve/fetchReservations",
+    async (token: string) => {
+        const response = await fetch("http://localhost:5000/api/v1/reservations", {
+            headers: { Authorization: `Bearer ${token}` }
+        });
+        const data = await response.json();
+        return data.success ? data.data : [];
+    }
+);
 
 export const reserveSlice = createSlice({
     name: "reserve",
@@ -15,7 +26,7 @@ export const reserveSlice = createSlice({
             const existingIndex = state.reserveItems.findIndex(
                 (item) =>
                     item.coworking === newReservation.coworking &&
-                    item.reserveDate === newReservation.reserveDate
+                    item.resvTime === newReservation.resvTime
             );
             if (existingIndex !== -1) {
                 state.reserveItems[existingIndex] = newReservation;
@@ -25,10 +36,10 @@ export const reserveSlice = createSlice({
         },
         removeReservation: (state, action: PayloadAction<ReservationItem>) => {
             const index = state.reserveItems.findIndex(obj =>
-                obj.nameLastname === action.payload.nameLastname &&
-                obj.tel === action.payload.tel &&
+                obj.name === action.payload.name &&
+                obj.telephone === action.payload.telephone &&
                 obj.coworking === action.payload.coworking &&
-                obj.reserveDate === action.payload.reserveDate
+                obj.resvTime === action.payload.resvTime
             );
 
             if (index !== -1) {

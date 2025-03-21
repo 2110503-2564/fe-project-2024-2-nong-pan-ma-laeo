@@ -113,8 +113,7 @@ export default function Reservation() {
 
             <button
                 className="block rounded-md bg-sky-600 hover:bg-indigo-600 px-3 py-2 shadow-sm text-white"
-                onClick={handleReservation}
-            >
+                onClick={handleReservation}>
                 Reserve Coworking
             </button>
         </main>
