@@ -3,5 +3,6 @@ export default async function getCoworking(id: string) {
     if (!response.ok) {
         throw new Error("Failed to fetch coworking")
     }
-    return await response.json()
+    const responseData = await response.json();
+    return responseData.data;
 }

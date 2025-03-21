@@ -1,3 +1,4 @@
+"use client"
 import getCoworkings from "@/libs/getCoworkings";
 import React, { Suspense } from "react";
 import { LinearProgress } from "@mui/material";
