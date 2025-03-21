@@ -32,24 +32,10 @@ export default function Reservation() {
     useEffect(() => {
         if (urlParams.get("model")) setName(urlParams.get("model")!);
         if (urlParams.get("tel")) setTelephone(urlParams.get("tel")!);
-        if (urlParams.get("coworking")) {
-            setCoworkingId(urlParams.get("coworking")!);
+        if (urlParams.get("id")) {
+            setCoworkingId(urlParams.get("id")!);
         }
     }, [urlParams]);
-
-    // Fetch coworking space details using `getCoworking`
-    useEffect(() => {
-        if (coworkingId) {
-            getCoworking(coworkingId)
-                .then((data) => {
-                    setCoworkingName(data.name);
-                })
-                .catch((error) => {
-                    console.error("Error fetching coworking:", error);
-                    alert("Failed to fetch coworking space.");
-                });
-        }
-    }, [coworkingId]);
 
     const handleReservation = async () => {
         if (!reserveTime || !name || !telephone) {
@@ -57,7 +43,7 @@ export default function Reservation() {
             return;
         }
 
-        const formattedDateTime = new Date(`${dayjs(reserveDate).format("YYYY-MM-DD")}T${reserveTime}:00Z`);
+        const formattedDateTime = new Date(`${dayjs(reserveDate).format("YYYY-MM-DD")} ${reserveTime}`);
 
         const reservationData: ReservationItem = {
             name: name,
@@ -65,6 +51,7 @@ export default function Reservation() {
             coworking: coworkingId,
             resvTime: formattedDateTime,
         };
+        console.log("Sending reservation request:", reservationData);
 
         dispatch(addReservation(reservationData));
 
