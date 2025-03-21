@@ -5,12 +5,15 @@ import { useSession } from "next-auth/react";
 import { AppDispatch } from "../redux/store"
 import { removeReservation } from "../redux/features/reserveSlice"
 import getCoworkings from "@/libs/getCoworkings";
+import getUserProfile from "@/libs/getUserProfile";
 
 export default function ReservationList() {
     const { data: session } = useSession();
     const dispatch = useDispatch<AppDispatch>();
     const [reservations, setReservations] = useState<ReservationItem[]>([]);
     const [coworkingMap, setCoworkingMap] = useState<{ [key: string]: string }>({});
+    const [userProfile, setUserProfile] = useState(null);
+
     useEffect(() => {
         const fetchReservations = async () => {
             if (!session?.user.token) return; // If no session, do nothing
@@ -45,10 +48,24 @@ export default function ReservationList() {
         fetchReservations();
         loadCoworkings();
     }, [session]);
+    useEffect(() => {
+        async function fetchProfile() {
+            if (session?.user?.token) {
+                try {
+                    const profile = await getUserProfile(session.user.token);
+                    console.log("Fetched user profile:", profile);
+                    setUserProfile(profile);
+                } catch (error) {
+                    console.error("Error fetching user profile:", error);
+                }
+            }
+        }
+        fetchProfile();
+    }, [session?.user?.token]);
     return (
         <>
             <h2 className="text-xl font-bold text-center mt-5">
-                {session?.user.role === "admin" ? "All Reservations" : "My Reservations"}
+                {userProfile?.data.role === "admin" ? "All Reservations" : "My Reservations"}
             </h2>
             {reservations.length === 0 ? (
                 <div className="text-center text-gray-500 text-lg mt-5">

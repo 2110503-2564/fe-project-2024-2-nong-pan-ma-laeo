@@ -7,7 +7,7 @@ export default function Card({ coworkingName, imgSrc }: { coworkingName: string,
         <InteractiveCard >
             <div className="w-full h-[70%] relative rounded-t-lg">
                 <Image src={imgSrc}
-                    alt='The Circus Hall'
+                    alt='picture'
                     fill={true}
                     objectFit='cover'
                     className='object-cover rounded-t-lg' />

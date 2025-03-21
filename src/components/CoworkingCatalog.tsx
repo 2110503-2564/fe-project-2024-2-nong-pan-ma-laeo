@@ -15,7 +15,7 @@ export default async function CoworkingCatalog({ coworkingsJson }: { coworkingsJ
             }}>
                 {
                     coworkingsJsonReady.data.map((coworkingItem: CoworkingItem) => (
-                        <Link key={coworkingItem.id} href={`/coworking/${coworkingItem.id}`} className="w-1/5">
+                        <Link key={coworkingItem._id} href={`/coworking/${coworkingItem._id}`} className="w-1/5">
                             <Card coworkingName={coworkingItem.name}
                                 imgSrc={coworkingItem.picture} />
                         </Link>

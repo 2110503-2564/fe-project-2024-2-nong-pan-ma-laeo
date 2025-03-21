@@ -22,7 +22,7 @@ interface ReservationItem {
   resvTime: Date;
 }
 
-interface user {
+interface User {
   id: string;
   name: string;
   email: string;

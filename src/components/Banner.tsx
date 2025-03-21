@@ -11,17 +11,13 @@ export default function Banner() {
     const [index, setIndex] = useState(0)
     const router = useRouter()
     const { data: session } = useSession()
-    const [userProfile, setUserProfile] = useState(null);
+    const [userProfile, setUserProfile] = useState<User | null>(null); // Explicitly define the type
+
     useEffect(() => {
         async function fetchProfile() {
             if (session?.user?.token) {
-                try {
-                    const profile = await getUserProfile(session.user.token);
-                    console.log("Fetched user profile:", profile);
-                    setUserProfile(profile);
-                } catch (error) {
-                    console.error("Error fetching user profile:", error);
-                }
+                const profile = await getUserProfile(session.user.token);
+                setUserProfile(profile);
             }
         }
         fetchProfile();
@@ -41,7 +37,7 @@ export default function Banner() {
             {
                 userProfile ? (
                     <div className='z-30 absolute top-5 right-10 font-semibold text-black text-xl'>
-                        Welcome {userProfile.data.name} (Role: {userProfile.data.role})
+                        Welcome {userProfile?.data.name} (Role: {userProfile?.data.role})
                     </div>
                 ) : (
                     <div className='z-30 absolute top-5 right-10 font-semibold text-black text-xl'>
