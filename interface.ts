@@ -21,3 +21,11 @@ interface ReservationItem {
   coworking: string;
   resvTime: Date;
 }
+
+interface user {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+  token: string;
+}

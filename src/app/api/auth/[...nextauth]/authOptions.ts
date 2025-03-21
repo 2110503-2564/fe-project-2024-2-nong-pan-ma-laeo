@@ -1,49 +1,67 @@
 import userLogIn from "@/libs/userLogIn";
+import getUserProfile from "@/libs/getUserProfile";
 import { AuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
 export const authOptions: AuthOptions = {
-
     providers: [
         CredentialsProvider({
-            // The name to display on the sign in form (e.g. "Sign in with...")
             name: "Credentials",
-            // `credentials` is used to generate a form on the sign in page.
-            // You can specify which fields should be submitted, by adding keys to the `credentials` object.
-            // e.g. domain, username, password, 2FA token, etc.
-            // You can pass any HTML attribute to the <input> tag through the object.
             credentials: {
                 email: { label: "Email", type: "email", placeholder: "email" },
                 password: { label: "Password", type: "password" }
             },
             async authorize(credentials, req) {
-                // Add logic here to look up the user from the credentials supplied
-                if (!credentials) return null
-                const user = await userLogIn(credentials.email, credentials.password)
+                if (!credentials) return null;
+
+                const user = await userLogIn(credentials.email, credentials.password);
+                console.log("User after login:", user);
 
                 if (user) {
-                    // Any object returned will be saved in `user` property of the JWT
-                    return user
-                } else {
-                    // If you return null then an error will be displayed advising the user to check their details.
-                    return null
-
-                    // You can also Reject this callback with an Error thus the user will be sent to the error page with the error message as a query parameter
+                    return user;  // Ensure full user data is returned
                 }
+                return null;
             }
         })
     ],
-    pages: {
-        signIn: "/login",
-    },
+    pages: { signIn: "/login" },
     session: { strategy: "jwt" },
     callbacks: {
         async jwt({ token, user }) {
-            return { ...token, ...user }
+            if (user) {
+                token.id = user.id;
+                token.name = user.name;
+                token.email = user.email;
+                token.role = user.role;
+                token.token = user.token;
+            }
+
+            // Fetch user profile from MongoDB if token exists
+            if (token.token && !token.name) {
+                try {
+                    const userProfile = await getUserProfile(token.token);
+                    console.log("Fetched User Profile:", userProfile);
+
+                    token.id = userProfile._id;
+                    token.name = userProfile.name;
+                    token.email = userProfile.email;
+                    token.role = userProfile.role;
+                } catch (error) {
+                    console.error("Failed to fetch user profile:", error);
+                }
+            }
+
+            return token;
         },
-        async session({ session, token, user }) {
-            session.user = token as any
-            return session
+        async session({ session, token }) {
+            session.user = {
+                id: token.id,
+                name: token.name,
+                email: token.email,
+                role: token.role,
+                token: token.token,
+            };
+            return session;
         },
     }
-}
+};

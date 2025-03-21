@@ -2,14 +2,30 @@
 import styles from './banner.module.css'
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
+import getUserProfile from '@/libs/getUserProfile';
+
 export default function Banner() {
     const covers = ['/img/coworking.webp', '/img/coworking2.webp', '/img/coworking3.webp', '/img/coworking4.webp']
     const [index, setIndex] = useState(0)
     const router = useRouter()
     const { data: session } = useSession()
-    console.log("Session data:", session);
+    const [userProfile, setUserProfile] = useState(null);
+    useEffect(() => {
+        async function fetchProfile() {
+            if (session?.user?.token) {
+                try {
+                    const profile = await getUserProfile(session.user.token);
+                    console.log("Fetched user profile:", profile);
+                    setUserProfile(profile);
+                } catch (error) {
+                    console.error("Error fetching user profile:", error);
+                }
+            }
+        }
+        fetchProfile();
+    }, [session?.user?.token]);
     return (
         <div className={styles.banner} onClick={() => setIndex(index + 1)}>
             <Image src={covers[index % 4]}
@@ -23,8 +39,15 @@ export default function Banner() {
                 <h3 className='text-xl font-serif'>Be It a Grand Celebration or a Prestigious Gathering!</h3>
             </div>
             {
-                session ? <div className='z-30 absolute top-5 right-10 font-semibold text-black text-xl'>
-                    Welcome {session.user?.name}</div> : null
+                userProfile ? (
+                    <div className='z-30 absolute top-5 right-10 font-semibold text-black text-xl'>
+                        Welcome {userProfile.data.name} (Role: {userProfile.data.role})
+                    </div>
+                ) : (
+                    <div className='z-30 absolute top-5 right-10 font-semibold text-black text-xl'>
+                        Welcome Guest
+                    </div>
+                )
             }
             <button className='bg-gradient-to-r from-gray-900 to-yellow-500 text-white 
             font-semibold py-2 px-6 m-2 rounded-full z-30 absolute bottom-0 right-0 
@@ -32,9 +55,6 @@ export default function Banner() {
                 onClick={(e) => { e.preventDefault(); router.push('/coworking') }}>
                 Select Coworking
             </button>
-
-
-
         </div>
     );
 }
