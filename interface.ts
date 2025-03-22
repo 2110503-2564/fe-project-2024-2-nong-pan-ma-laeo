@@ -19,7 +19,7 @@ interface ReservationItem {
   name: string;
   telephone: string;
   coworking: string;
-  resvTime: Date;
+  resvTime: string;
 }
 
 interface User {

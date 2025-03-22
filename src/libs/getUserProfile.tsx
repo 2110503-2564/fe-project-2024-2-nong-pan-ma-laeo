@@ -8,5 +8,11 @@ export default async function getUserProfile(token: string) {
     if (!response.ok) {
         throw new Error("Failed to fetch user Profile")
     }
-    return await response.json()
+    const userData = await response.json();
+
+    // ✅ Save token in localStorage
+    localStorage.setItem("token", token);
+    localStorage.setItem("user", JSON.stringify(userData)); // Save user info (optional)
+
+    return userData;
 }

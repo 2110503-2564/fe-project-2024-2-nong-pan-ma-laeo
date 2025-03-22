@@ -1,108 +1,121 @@
-"use client"
-import DateReserve from "@/components/DateReserve"
+"use client";
+
+import DateReserve from "@/components/DateReserve";
 import TextField from "@mui/material/TextField";
 import { useEffect, useState } from "react";
 import dayjs, { Dayjs } from "dayjs";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../redux/store";
-import { addReservation } from "../../redux/features/reserveSlice";
 import { useSearchParams } from "next/navigation";
 import makeReservation from "@/libs/makeReservation";
-import getCoworking from "@/libs/getCoworking";
 
 export default function Reservation() {
+    // State Management
     const [reserveDate, setReserveDate] = useState<Dayjs | null>(null);
     const [reserveTime, setReserveTime] = useState<string>("");
     const [coworkingId, setCoworkingId] = useState<string>("");
-    const [coworkingName, setCoworkingName] = useState<string>("Bloom");
+    const [coworkingName, setCoworkingName] = useState<string>("67bd6139cc4d71cc9c05ad56");
     const [name, setName] = useState<string>("");
     const [telephone, setTelephone] = useState<string>("");
-
-    const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setName(event.target.value);
-    }
-    const handleTelChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setTelephone(event.target.value);
-    }
+    const [token, setToken] = useState<string | null>(null);
 
     const dispatch = useDispatch<AppDispatch>();
     const urlParams = useSearchParams();
 
-    // Pre-fill fields from URL params (if available)
+    // Fetch Token from Local Storage
     useEffect(() => {
-        if (urlParams.get("model")) setName(urlParams.get("model")!);
-        if (urlParams.get("tel")) setTelephone(urlParams.get("tel")!);
-        if (urlParams.get("id")) {
-            setCoworkingId(urlParams.get("id")!);
-        }
+        setToken(localStorage.getItem("token"));
+    }, []);
+
+    // Pre-fill fields from URL parameters
+    useEffect(() => {
+        const model = urlParams.get("model");
+        const tel = urlParams.get("tel");
+        const coworkingIdFromURL = urlParams.get("_id");
+
+        if (model) setName(model);
+        if (tel) setTelephone(tel);
+        if (coworkingIdFromURL) setCoworkingId(coworkingIdFromURL);
     }, [urlParams]);
 
+    // Handle Input Changes
+    const handleInputChange = (setter: React.Dispatch<React.SetStateAction<string>>) =>
+        (event: React.ChangeEvent<HTMLInputElement>) => {
+            setter(event.target.value);
+        };
+
+    // Handle Reservation Submission
     const handleReservation = async () => {
-        if (!reserveTime || !name || !telephone) {
-            alert("Please fill in all fields before making a reservation.");
+        if (!reserveDate || !reserveTime || !name || !telephone || !coworkingId) {
+            alert("⚠️ Please fill in all fields before making a reservation.");
+            console.warn("Missing fields:", { name, telephone, coworkingId, reserveDate, reserveTime });
             return;
         }
 
-        const formattedDateTime = new Date(`${dayjs(reserveDate).format("YYYY-MM-DD")} ${reserveTime}`);
+        const formattedDateTime = `${dayjs(reserveDate).format("YYYY-MM-DD")} ${reserveTime}`;
 
-        const reservationData: ReservationItem = {
-            name: name,
-            telephone: telephone,
+        const reservationData = {
+            name,
+            telephone,
             coworking: coworkingId,
             resvTime: formattedDateTime,
         };
-        console.log("Sending reservation request:", reservationData);
-
-        dispatch(addReservation(reservationData));
 
         try {
             const response = await makeReservation(reservationData);
-            console.log("Reservation Successful:", response);
-            alert("Reservation successful!");
+            console.log("✅ Reservation Successful:", response);
+            alert("🎉 Reservation successful!");
         } catch (error) {
-            console.error("Error making reservation:", error);
-            alert("Failed to make a reservation.");
+            console.error("❌ Error making reservation:", error);
+            alert("Failed to make a reservation. Please try again.");
         }
     };
 
-
     return (
-        <main className="w-[100%] flex flex-col items-center space-y-4">
-            <div className="text-xl font-medium">New Reservation</div>
-            <div className="w-fit space-y-2">
-                <div className="text-md text-left text-gray-600">
-                    Personal Information
-                </div>
+        <main className="w-full flex flex-col items-center space-y-4">
+            <h1 className="text-xl font-medium">New Reservation</h1>
+
+            {/* Personal Information Section */}
+            <section className="w-fit space-y-2">
+                <h2 className="text-md text-left text-gray-600">Personal Information</h2>
                 <div className="bg-slate-100 rounded-lg space-y-4 w-full px-10 py-5 flex flex-col justify-center">
                     <TextField
                         className="w-full"
                         variant="standard"
                         label="Name-Lastname"
                         value={name}
-                        onChange={handleNameChange}
+                        onChange={handleInputChange(setName)}
                     />
                     <TextField
                         className="w-full"
                         variant="standard"
-                        label="Contact-Number"
+                        label="Contact Number"
                         value={telephone}
-                        onChange={handleTelChange}
+                        onChange={handleInputChange(setTelephone)}
                     />
                 </div>
+            </section>
 
-                <div className="text-md text-left text-gray-600">Reservation Date</div>
+            {/* Reservation Details */}
+            <section className="w-fit space-y-2">
+                <h2 className="text-md text-left text-gray-600">Reservation Date</h2>
                 <DateReserve
-                    onDateChange={(value: Dayjs) => setReserveDate(value)}
-                    onLocationChange={(value: string) => setCoworkingName(value)}
-                    onTimeChange={(value: string) => setReserveTime(value)}
+                    onDateChange={setReserveDate}
+                    onLocationChange={(value: string) => {
+                        setCoworkingName(value);
+                        setCoworkingId(value);
+                    }}
+                    onTimeChange={setReserveTime}
                 />
-            </div>
+            </section>
 
+            {/* Submit Button */}
             <button
-                className="block rounded-md bg-sky-600 hover:bg-indigo-600 px-3 py-2 shadow-sm text-white"
-                onClick={handleReservation}>
+                className="rounded-md bg-sky-600 hover:bg-indigo-600 px-4 py-2 text-white shadow-md transition duration-200"
+                onClick={handleReservation}
+            >
                 Reserve Coworking
             </button>
         </main>
-    )
+    );
 }

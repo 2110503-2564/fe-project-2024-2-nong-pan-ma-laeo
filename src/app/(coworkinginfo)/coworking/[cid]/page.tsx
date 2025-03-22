@@ -9,7 +9,6 @@ export default async function CoworkingDetailPage({ params }: { params: { cid: s
     // mockCoworkingRepo.set("002", { name: "Spark Space", image: "/img/sparkspace.jpg" })
     // mockCoworkingRepo.set("003", { name: "The Grand Table", image: "/img/grandtable.jpg" })
     const coworkingDetail = await getCoworking(params.cid)
-    console.log("Detail:", JSON.stringify(coworkingDetail, null, 2));
     if (!coworkingDetail) {
         return (
             <main className="text-center p-14">

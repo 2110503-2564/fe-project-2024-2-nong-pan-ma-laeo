@@ -53,7 +53,6 @@ export default function ReservationList() {
             if (session?.user?.token) {
                 try {
                     const profile = await getUserProfile(session.user.token);
-                    console.log("Fetched user profile:", profile);
                     setUserProfile(profile);
                 } catch (error) {
                     console.error("Error fetching user profile:", error);
