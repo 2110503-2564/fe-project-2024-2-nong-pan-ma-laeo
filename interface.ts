@@ -16,10 +16,18 @@ interface CoworkingJson {
 }
 
 interface ReservationItem {
+  _id: string;
   name: string;
   telephone: string;
   coworking: string;
   resvTime: string;
+}
+
+interface ReservationJson {
+  success: boolean,
+  count: number,
+  pagination: Object,
+  data: CoworkingItem[]
 }
 
 interface User {

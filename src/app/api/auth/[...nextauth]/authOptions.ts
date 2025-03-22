@@ -62,7 +62,6 @@ export const authOptions: AuthOptions = {
                 role: token.role || null,
                 token: token.token || null, // Ensure token persists
             };
-            console.log("✅ Session Data in Callback (AFTER FIX):", session);
             return session;
         },
     }

@@ -1,32 +1,25 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
 import { useSession } from "next-auth/react";
-import { AppDispatch } from "../redux/store";
-import { removeReservation } from "../redux/features/reserveSlice";
+import { useRouter } from "next/navigation";
 import getCoworkings from "@/libs/getCoworkings";
-import getUserProfile from "@/libs/getUserProfile";
+import getReservations from "@/libs/getReservations";
+import deleteReservation from "@/libs/deleteReservation";
 
 export default function ReservationList() {
     const { data: session } = useSession();
-    const dispatch = useDispatch<AppDispatch>();
     const [reservations, setReservations] = useState<ReservationItem[]>([]);
     const [coworkingMap, setCoworkingMap] = useState<{ [key: string]: string }>({});
-    const [userProfile, setUserProfile] = useState(null);
+    const router = useRouter();
 
     useEffect(() => {
         const fetchReservations = async () => {
-            if (!session?.user.token) return;
+            if (!session?.user?.token) return;
 
             try {
-                const response = await fetch("https://backend-coworking-z1ql.onrender.com/api/v1/reservations", {
-                    headers: { Authorization: `Bearer ${session.user.token}` }
-                });
-                const data = await response.json();
-                if (data.success) {
-                    setReservations(data.data);
-                }
+                const reservationsData = await getReservations(session.user.token, session.user._id, session.user.role);
+                setReservations(reservationsData);
             } catch (error) {
                 console.error("Error fetching reservations:", error);
             }
@@ -49,24 +42,35 @@ export default function ReservationList() {
         loadCoworkings();
     }, [session]);
 
-    useEffect(() => {
-        async function fetchProfile() {
-            if (session?.user?.token) {
-                try {
-                    const profile = await getUserProfile(session.user.token);
-                    setUserProfile(profile);
-                } catch (error) {
-                    console.error("Error fetching user profile:", error);
-                }
+    const handleEdit = (reservation: ReservationItem) => {
+        router.push(
+            `/myreservation/edit?reservationId=${reservation._id}&name=${reservation.name}&telephone=${reservation.telephone}&resvTime=${reservation.resvTime}&coworking=${reservation.coworking}`
+        );
+    };
+
+    const handleDelete = async (reservationId: string) => {
+        if (!confirm("Are you sure you want to delete this reservation?")) return;
+
+        try {
+            // console.log("Deleting reservation:", reservationId); // Debugging
+
+            const success = await deleteReservation(session?.user.token!, reservationId);
+            if (success) {
+                alert("🚀 Reservation deleted!");
+                setReservations(reservations.filter((r) => r._id !== reservationId)); // ✅ Remove from UI
+            } else {
+                alert("Failed to delete reservation.");
             }
+        } catch (error) {
+            console.error("Error deleting reservation:", error);
+            alert("Failed to delete reservation.");
         }
-        fetchProfile();
-    }, [session?.user?.token]);
+    };
 
     return (
         <div className="flex flex-col items-center min-h-screen bg-gray-100 p-6">
             <h2 className="text-3xl font-bold mb-6">
-                {userProfile?.data.role === "admin" ? "All Reservations" : "My Reservations"}
+                {session?.user.role === "admin" ? "All Reservations" : "My Reservations"}
             </h2>
             {reservations.length === 0 ? (
                 <div className="text-gray-500 text-lg">No Coworking Reservation</div>
@@ -80,12 +84,20 @@ export default function ReservationList() {
                                 <div className="text-gray-600">Location: {coworkingMap[reservationItem.coworking]}</div>
                                 <div className="text-gray-600">Reservation Date: {new Date(reservationItem.resvTime).toLocaleString()}</div>
                             </div>
-                            <button
-                                onClick={() => dispatch(removeReservation(reservationItem))}
-                                className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-700 transition"
-                            >
-                                Remove
-                            </button>
+                            <div>
+                                <button
+                                    onClick={() => handleEdit(reservationItem)}
+                                    className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-indigo-600 transition"
+                                >
+                                    Edit
+                                </button>
+                                <button
+                                    onClick={() => handleDelete(reservationItem._id)}
+                                    className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-700 transition"
+                                >
+                                    Remove
+                                </button>
+                            </div>
                         </div>
                     ))}
                 </div>
