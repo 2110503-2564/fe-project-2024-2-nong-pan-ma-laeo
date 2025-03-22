@@ -19,7 +19,7 @@ export default function ReservationList() {
             if (!session?.user.token) return; // If no session, do nothing
 
             try {
-                const response = await fetch("http://localhost:5000/api/v1/reservations", {
+                const response = await fetch("https://backend-coworking-z1ql.onrender.com/api/v1/reservations", {
                     headers: {
                         Authorization: `Bearer ${session.user.token}` // Send token in headers
                     }

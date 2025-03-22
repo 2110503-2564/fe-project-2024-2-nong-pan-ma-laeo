@@ -9,7 +9,7 @@ export default function Banner() {
     const covers = ['/img/coworking.webp', '/img/coworking2.webp', '/img/coworking3.webp', '/img/coworking4.webp']
     const [index, setIndex] = useState(0)
     const router = useRouter()
-    const { data: session } = useSession();
+    const { data: session, status } = useSession();
     return (
         <div className={styles.banner} onClick={() => setIndex(index + 1)}>
             <Image src={covers[index % 4]}

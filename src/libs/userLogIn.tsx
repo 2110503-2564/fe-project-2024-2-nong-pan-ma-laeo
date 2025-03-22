@@ -1,5 +1,5 @@
 export default async function userLogIn(userEmail: string, userPassword: string) {
-    const response = await fetch("http://localhost:5000/api/v1/auth/login", {
+    const response = await fetch("https://backend-coworking-z1ql.onrender.com/api/v1/auth/login", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -15,7 +15,7 @@ export default async function userLogIn(userEmail: string, userPassword: string)
     }
 
     const data = await response.json();
-    console.log("🔹 API Response:", data); // Debugging
+    // console.log("🔹 API Response:", data); // Debugging
 
     // Ensure the response contains user data
     if (!data || !data.user || !data.user.id) {

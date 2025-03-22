@@ -1,5 +1,5 @@
 export default async function getCoworking(id: string) {
-    const response = await fetch(`http://localhost:5000/api/v1/coworkings/${id}`)
+    const response = await fetch(`https://backend-coworking-z1ql.onrender.com/api/v1/coworkings/${id}`)
     if (!response.ok) {
         throw new Error("Failed to fetch coworking")
     }
