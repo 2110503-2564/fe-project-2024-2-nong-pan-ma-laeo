@@ -25,8 +25,6 @@ export default function EditReservation() {
         const tel = urlParams.get("telephone");
         const time = urlParams.get("resvTime");
         const coworkingIdFromURL = urlParams.get("coworking");
-
-
         if (resId) setReservationId(resId);
         if (model) setName(model);
         if (tel) setTelephone(tel);
@@ -54,6 +52,7 @@ export default function EditReservation() {
             coworking: coworkingId,
             resvTime: formattedDateTime
         });
+
         try {
             await updateReservation(reservationId, { name, telephone, coworking: coworkingId, resvTime: formattedDateTime }, session?.user.token);
             alert("✅ Reservation updated successfully!");
@@ -66,7 +65,7 @@ export default function EditReservation() {
     return (
         <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
             <h2 className="text-3xl font-bold mb-6">Edit Reservation</h2>
-            <div className="w-96 p-8 bg-white shadow-lg rounded-lg space-y-4">
+            <div className="w-full max-w-md p-8 bg-white shadow-lg rounded-lg space-y-6">
                 <h3 className="text-lg font-semibold">Personal Information</h3>
                 <TextField
                     className="w-full"
@@ -83,13 +82,16 @@ export default function EditReservation() {
                     onChange={handleInputChange(setTelephone)}
                 />
                 <h3 className="text-lg font-semibold">Reservation Details</h3>
-                <DateReserve
-                    onDateChange={setReserveDate}
-                    onLocationChange={setCoworkingId}
-                    onTimeChange={setReserveTime}
-                />
+                
+                <div className="w-full max-w-md">
+                    <DateReserve
+                        onDateChange={setReserveDate}
+                        onLocationChange={setCoworkingId}
+                        onTimeChange={setReserveTime}
+                    />
+                </div>
                 <button
-                    className="w-full bg-green-500 text-white p-2 rounded hover:bg-green-600 transition duration-200"
+                    className="w-full bg-green-500 text-white p-3 rounded-lg hover:bg-green-600 transition duration-200"
                     onClick={handleUpdateReservation}
                 >
                     Update Reservation
