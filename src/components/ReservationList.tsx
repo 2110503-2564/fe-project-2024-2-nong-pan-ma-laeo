@@ -1,9 +1,10 @@
-"use client"
+"use client";
+
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useSession } from "next-auth/react";
-import { AppDispatch } from "../redux/store"
-import { removeReservation } from "../redux/features/reserveSlice"
+import { AppDispatch } from "../redux/store";
+import { removeReservation } from "../redux/features/reserveSlice";
 import getCoworkings from "@/libs/getCoworkings";
 import getUserProfile from "@/libs/getUserProfile";
 
@@ -16,22 +17,21 @@ export default function ReservationList() {
 
     useEffect(() => {
         const fetchReservations = async () => {
-            if (!session?.user.token) return; // If no session, do nothing
+            if (!session?.user.token) return;
 
             try {
                 const response = await fetch("https://backend-coworking-z1ql.onrender.com/api/v1/reservations", {
-                    headers: {
-                        Authorization: `Bearer ${session.user.token}` // Send token in headers
-                    }
+                    headers: { Authorization: `Bearer ${session.user.token}` }
                 });
                 const data = await response.json();
                 if (data.success) {
-                    setReservations(data.data); // Set reservations from API
+                    setReservations(data.data);
                 }
             } catch (error) {
                 console.error("Error fetching reservations:", error);
             }
         };
+
         const loadCoworkings = async () => {
             try {
                 const coworkingData = await getCoworkings();
@@ -48,6 +48,7 @@ export default function ReservationList() {
         fetchReservations();
         loadCoworkings();
     }, [session]);
+
     useEffect(() => {
         async function fetchProfile() {
             if (session?.user?.token) {
@@ -61,32 +62,34 @@ export default function ReservationList() {
         }
         fetchProfile();
     }, [session?.user?.token]);
+
     return (
-        <>
-            <h2 className="text-xl font-bold text-center mt-5">
+        <div className="flex flex-col items-center min-h-screen bg-gray-100 p-6">
+            <h2 className="text-3xl font-bold mb-6">
                 {userProfile?.data.role === "admin" ? "All Reservations" : "My Reservations"}
             </h2>
             {reservations.length === 0 ? (
-                <div className="text-center text-gray-500 text-lg mt-5">
-                    No Coworking Reservation
-                </div>
+                <div className="text-gray-500 text-lg">No Coworking Reservation</div>
             ) : (
-                reservations.map((reservationItem: ReservationItem) => (
-                    <div key={reservationItem.coworking} className="bg-slate-200 rounded px-5 mx-5 py-2 my-2 flex justify-between items-center">
-                        <div>
-                            <div>Name: {reservationItem.name}</div>
-                            <div className="text-md">Tel: {reservationItem.telephone}</div>
-                            <div className="text-md">Location: {coworkingMap[reservationItem.coworking]}</div>
-                            <div className="text-md">Reservation Date: {new Date(reservationItem.resvTime).toLocaleString()}</div>
+                <div className="space-y-4 w-full max-w-2xl">
+                    {reservations.map((reservationItem: ReservationItem) => (
+                        <div key={reservationItem.coworking} className="bg-white shadow-md rounded-lg p-4 flex justify-between items-center">
+                            <div>
+                                <div className="text-lg font-semibold">Name: {reservationItem.name}</div>
+                                <div className="text-gray-600">Tel: {reservationItem.telephone}</div>
+                                <div className="text-gray-600">Location: {coworkingMap[reservationItem.coworking]}</div>
+                                <div className="text-gray-600">Reservation Date: {new Date(reservationItem.resvTime).toLocaleString()}</div>
+                            </div>
+                            <button
+                                onClick={() => dispatch(removeReservation(reservationItem))}
+                                className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-700 transition"
+                            >
+                                Remove
+                            </button>
                         </div>
-                        <button
-                            onClick={() => dispatch(removeReservation(reservationItem))}
-                            className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-700 transition">
-                            Remove
-                        </button>
-                    </div>
-                ))
+                    ))}
+                </div>
             )}
-        </>
-    )
+        </div>
+    );
 }
