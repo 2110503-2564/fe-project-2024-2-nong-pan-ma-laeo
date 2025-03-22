@@ -48,37 +48,51 @@ export default function Reservation() {
     };
 
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-            <h2 className="text-3xl font-bold mb-6">New Reservation</h2>
-            <div className="w-96 p-8 bg-white shadow-lg rounded-lg space-y-4">
-                <h3 className="text-lg font-semibold">Personal Information</h3>
-                <TextField
-                    className="w-full"
-                    variant="outlined"
-                    label="Name-Lastname"
-                    value={name}
-                    onChange={handleInputChange(setName)}
-                />
-                <TextField
-                    className="w-full"
-                    variant="outlined"
-                    label="Contact Number"
-                    value={telephone}
-                    onChange={handleInputChange(setTelephone)}
-                />
+        <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 px-4">
+            {/* Title */}
+            <h2 className="text-3xl font-bold mb-8 text-center">New Reservation</h2>
 
-                <h3 className="text-lg font-semibold">Reservation Details</h3>
-                <DateReserve
-                    onDateChange={setReserveDate}
-                    onLocationChange={setCoworkingId}
-                    onTimeChange={setReserveTime}
-                />
+            {/* Reservation Form */}
+            <div className="w-full max-w-lg p-8 bg-white shadow-lg rounded-lg space-y-6">
+                {/* Personal Information */}
+                <div className="space-y-4">
+                    <h3 className="text-lg font-semibold text-center">Personal Information</h3>
+                    <TextField
+                        fullWidth
+                        variant="outlined"
+                        label="Name-Lastname"
+                        value={name}
+                        onChange={handleInputChange(setName)}
+                    />
+                    <TextField
+                        fullWidth
+                        variant="outlined"
+                        label="Contact Number"
+                        value={telephone}
+                        onChange={handleInputChange(setTelephone)}
+                    />
+                </div>
 
+                {/* Reservation Details */}
+                <div className="space-y-4">
+                    <h3 className="text-lg font-semibold text-center">Reservation Details</h3>
+                    <div className="w-full flex flex-col items-center">
+                        <div className="w-full max-w-md">
+                            <DateReserve
+                                onDateChange={setReserveDate}
+                                onLocationChange={setCoworkingId}
+                                onTimeChange={setReserveTime}
+                                />
+                        </div>
+                    </div>
+                </div>
+
+                {/* Reserve Button */}
                 <button
-                    className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition duration-200"
+                    className="w-full bg-blue-500 text-white p-3 rounded-lg hover:bg-blue-600 transition duration-200 text-lg font-medium"
                     onClick={handleReservation}
                 >
-                    Reserve Now
+                    Reserve Coworking
                 </button>
             </div>
         </div>
