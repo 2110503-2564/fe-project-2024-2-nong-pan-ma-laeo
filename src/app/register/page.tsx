@@ -24,9 +24,9 @@ export default function RegisterPage() {
 
         setLoading(true);
         try {
-            await userRegister(name, email, password); // Pass name to the function
+            await userRegister(name, email, password);
             alert("Registration successful! Redirecting to login...");
-            router.push("/login"); // Redirect user to login page
+            router.push("/login");
         } catch (err: any) {
             setError(err.message || "Registration failed.");
         } finally {
@@ -35,17 +35,17 @@ export default function RegisterPage() {
     };
 
     return (
-        <div className="flex flex-col items-center justify-center h-screen">
-            <h2 className="text-2xl font-bold mb-4">Register</h2>
-            <form onSubmit={handleSubmit} className="w-80 space-y-4">
+        <div className="flex flex-col items-center justify-center h-screen gap-6">
+            <h2 className="text-3xl font-bold">Register</h2>
+            <form onSubmit={handleSubmit} className="w-96 p-10 bg-white shadow-lg rounded-lg space-y-4">
                 <input type="text" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} required className="w-full p-2 border rounded" />
                 <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required className="w-full p-2 border rounded" />
                 <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required className="w-full p-2 border rounded" />
                 <input type="password" placeholder="Confirm Password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required className="w-full p-2 border rounded" />
-                <button type="submit" className="w-full bg-green-500 text-white p-2 rounded hover:bg-green-600" disabled={loading}>
+                <button type="submit" className="w-full bg-green-500 text-white p-2 rounded hover:bg-green-600 transition duration-200" disabled={loading}>
                     {loading ? "Registering..." : "Register"}
                 </button>
-                {error && <p className="text-red-500">{error}</p>}
+                {error && <p className="text-red-500 text-sm">{error}</p>}
             </form>
         </div>
     );
