@@ -53,14 +53,13 @@ export const authOptions: AuthOptions = {
             }
             return token;
         },
-
         async session({ session, token }) {
             session.user = {
-                id: token.id || null,
-                name: token.name || null,
-                email: token.email || null,
-                role: token.role || null,
-                token: token.token || null, // Ensure token persists
+                id: token.id,
+                name: token.name,
+                email: token.email,
+                role: token.role,
+                token: token.token, // Ensure token persists
             };
             return session;
         },

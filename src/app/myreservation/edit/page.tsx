@@ -54,7 +54,7 @@ export default function EditReservation() {
         });
 
         try {
-            await updateReservation(reservationId, { name, telephone, coworking: coworkingId, resvTime: formattedDateTime }, session?.user.token);
+            await updateReservation(reservationId, { name, telephone, coworking: coworkingId, resvTime: formattedDateTime });
             alert("✅ Reservation updated successfully!");
             router.push("/myreservation"); // Redirect to My Reservations
         } catch (error) {

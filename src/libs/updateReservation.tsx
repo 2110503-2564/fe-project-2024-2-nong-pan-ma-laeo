@@ -1,4 +1,9 @@
-export default async function updateReservation(reservationId: string, updatedData: Partial<ReservationItem>, token: string) {
+export default async function updateReservation(reservationId: string, updatedData: Partial<ReservationItem>) {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+        throw new Error("No authentication token found. Please log in.");
+    }
     const response = await fetch(`https://backend-coworking-z1ql.onrender.com/api/v1/reservations/${reservationId}`, {
         method: "PUT",
         headers: {
