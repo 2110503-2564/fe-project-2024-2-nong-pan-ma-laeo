@@ -26,7 +26,11 @@ export default function ReservationList() {
                 });
                 setCoworkingMap(coworkingNameMap);
                 // Now load reservations
-                const reservationsData = await getReservations(session.user.token, session.user._id, session.user.role);
+                const reservationsData = await getReservations(session.user.token, session.user.id, session.user.role);
+
+                console.log("🔹 Coworking Map:", coworkingNameMap);
+                console.log("🔹 Reservations:", reservationsData);
+
                 setReservations(reservationsData);
             } catch (error) {
                 console.error("Error fetching data:", error);
@@ -41,6 +45,7 @@ export default function ReservationList() {
         router.push(
             `/myreservation/edit?reservationId=${reservation._id}&name=${reservation.name}&telephone=${reservation.telephone}&resvTime=${reservation.resvTime}&coworking=${reservation.coworking}`
         );
+
     };
 
     const handleDelete = async (reservationId: string) => {
@@ -80,7 +85,7 @@ export default function ReservationList() {
                             <div>
                                 <div className="text-lg font-semibold">Name: {reservationItem.name}</div>
                                 <div className="text-gray-600">Tel: {reservationItem.telephone}</div>
-                                <div className="text-gray-600">Location: {coworkingMap[reservationItem.coworking._id]}</div>
+                                <div className="text-gray-600">Location: {coworkingMap[(reservationItem.coworking as any)?._id]}</div>
                                 <div className="text-gray-600">Reservation Date: {reservationItem.resvTime}</div>
                             </div>
                             <div>

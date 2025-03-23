@@ -55,7 +55,7 @@ export default function Reservation() {
             if (!session?.user.token) {
                 return null;
             }
-            await makeReservation({ name, telephone, coworking: coworkingId, resvTime: formattedDateTime, token: session?.user.token });
+            await makeReservation({ name, telephone, coworking: coworkingId, resvTime: formattedDateTime });
             alert("🎉 Reservation successful!");
         } catch (error) {
             alert("Failed to make a reservation. Please try again.");

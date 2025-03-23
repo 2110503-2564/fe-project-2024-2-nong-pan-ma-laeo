@@ -36,9 +36,9 @@ export default function CardPanel() {
                 justifyContent: "space-around", flexWrap: "wrap", padding: "10px"
             }}>
                 {
-                    coworkingResponse.map((coworkingItem) => (
+                    coworkingResponse.map((coworkingItem: CoworkingItem) => (
                         <div className="w-1/5">
-                            <Link href={`/coworking/${coworkingItem.id}`} className="w-1/5">
+                            <Link href={`/coworking/${coworkingItem._id}`} className="w-1/5">
                                 <Card
                                     coworkingName={coworkingItem.name}
                                     imgSrc={coworkingItem.picture}
