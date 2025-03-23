@@ -2,12 +2,13 @@ export default async function deleteReservation(token: string, reservationId: st
     try {
         // console.log("Sending DELETE request to backend for reservation:", reservationId);
 
-        const response = await fetch(`https://backend-coworking.vercel.app//api/v1/reservations/${reservationId}`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/reservations/${reservationId}`, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${token}`,
             },
+            mode: 'no-cors'
         });
 
         const data = await response.json();

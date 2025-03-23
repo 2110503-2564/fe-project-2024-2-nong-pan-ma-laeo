@@ -18,19 +18,12 @@ export default function Reservation() {
     const { data: session } = useSession();
     const urlParams = useSearchParams();
 
+
     useEffect(() => {
         const model = urlParams.get("model");
         const tel = urlParams.get("tel");
         const coworkingIdFromURL = urlParams.get("_id");
-        useEffect(() => {
-            const model = urlParams.get("model");
-            const tel = urlParams.get("tel");
-            const coworkingIdFromURL = urlParams.get("_id");
 
-            if (model) setName(model);
-            if (tel) setTelephone(tel);
-            if (coworkingIdFromURL) setCoworkingId(coworkingIdFromURL);
-        }, [urlParams]);
         if (model) setName(model);
         if (tel) setTelephone(tel);
         if (coworkingIdFromURL) setCoworkingId(coworkingIdFromURL);

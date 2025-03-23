@@ -8,12 +8,13 @@ export default async function makeReservation({ name, telephone, coworking, resv
     }
 
     console.log("Using Token:", token);
-    const response = await fetch(`https://backend-coworking.vercel.app/api/v1/coworkings/${coworking}/reservations`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/coworkings/${coworking}/reservations`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${token}`
         },
+        mode: 'no-cors',
         body: JSON.stringify({
             name,
             telephone,

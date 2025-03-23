@@ -4,12 +4,13 @@ export default async function updateReservation(reservationId: string, updatedDa
     if (!token) {
         throw new Error("No authentication token found. Please log in.");
     }
-    const response = await fetch(`https://backend-coworking.vercel.app//api/v1/reservations/${reservationId}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/reservations/${reservationId}`, {
         method: "PUT",
         headers: {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${token}`,
         },
+        mode: 'no-cors',
         body: JSON.stringify(updatedData),
     });
 
