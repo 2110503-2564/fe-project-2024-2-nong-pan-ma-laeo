@@ -8,7 +8,7 @@ export default async function makeReservation({ name, telephone, coworking, resv
     }
 
     console.log("Using Token:", token);
-    const response = await fetch(`https://backend-coworking-z1ql.onrender.com/api/v1/coworkings/${coworking}/reservations`, {
+    const response = await fetch(`https://backend-coworking.vercel.app/api/v1/coworkings/${coworking}/reservations`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
