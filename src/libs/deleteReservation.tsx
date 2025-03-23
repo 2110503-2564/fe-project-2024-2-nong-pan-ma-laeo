@@ -8,6 +8,7 @@ export default async function deleteReservation(token: string, reservationId: st
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${token}`,
             },
+            mode: 'no-cors'
         });
 
         const data = await response.json();

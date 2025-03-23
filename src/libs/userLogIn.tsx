@@ -8,6 +8,7 @@ export default async function userLogIn(userEmail: string, userPassword: string)
             email: userEmail,
             password: userPassword,
         }),
+        mode: 'no-cors'
     });
 
     if (!response.ok) {

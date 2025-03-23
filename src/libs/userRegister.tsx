@@ -9,6 +9,7 @@ export default async function userRegister(userName: string, userEmail: string, 
             email: userEmail,
             password: userPassword,
         }),
+        mode: 'no-cors'
     });
 
     if (!response.ok) {

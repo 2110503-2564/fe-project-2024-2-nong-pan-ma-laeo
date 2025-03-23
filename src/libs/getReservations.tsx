@@ -6,7 +6,8 @@ export default async function getReservations(token: string, userId?: string, ro
                 : `https://backend-coworking.vercel.app//api/v1/users/${userId}/reservations`;
 
         const response = await fetch(endpoint, {
-            headers: { Authorization: `Bearer ${token}` }
+            headers: { Authorization: `Bearer ${token}` },
+            mode: 'no-cors'
         });
 
         const data = await response.json();

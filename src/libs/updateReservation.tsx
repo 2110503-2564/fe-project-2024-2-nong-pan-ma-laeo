@@ -10,6 +10,7 @@ export default async function updateReservation(reservationId: string, updatedDa
             "Content-Type": "application/json",
             "Authorization": `Bearer ${token}`,
         },
+        mode: 'no-cors',
         body: JSON.stringify(updatedData),
     });
 
