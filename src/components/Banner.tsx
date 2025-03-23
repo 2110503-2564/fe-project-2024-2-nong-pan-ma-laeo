@@ -6,7 +6,7 @@ import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 
 export default function Banner() {
-    const covers = ['/img/coworking.webp', '/img/coworking2.webp', '/img/coworking3.webp', '/img/coworking4.webp']
+    const covers = ['/img/coworking-1.webp', '/img/coworking2-1.webp', '/img/coworking3-1.webp', '/img/coworking4-1.webp']
     const [index, setIndex] = useState(0)
     const router = useRouter()
     const { data: session, status } = useSession();

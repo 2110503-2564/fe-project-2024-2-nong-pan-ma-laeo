@@ -7,7 +7,7 @@ import dayjs, { Dayjs } from "dayjs";
 import DateReserve from "@/components/DateReserve";
 import updateReservation from "@/libs/updateReservation";
 
-export default function EditReservation() {
+export default function ReviewReservation() {
     const { data: session } = useSession();
     const [reserveDate, setReserveDate] = useState<Dayjs | null>(null);
     const [reserveTime, setReserveTime] = useState<string>("");
@@ -64,7 +64,7 @@ export default function EditReservation() {
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-            <h2 className="text-3xl font-bold mb-6">Edit Reservation</h2>
+            <h2 className="text-3xl font-bold mb-6">Review Reservation</h2>
             <div className="w-full max-w-md p-8 bg-white shadow-lg rounded-lg space-y-6">
                 <h3 className="text-lg font-semibold">Personal Information</h3>
                 <TextField
@@ -81,20 +81,20 @@ export default function EditReservation() {
                     value={telephone}
                     onChange={handleInputChange(setTelephone)}
                 />
-                <h3 className="text-lg font-semibold">Reservation Details</h3>
+                <h3 className="text-lg font-semibold">Review Details</h3>
+                <TextField
+                    className="w-full"
+                    variant="outlined"
+                    label="Review"
 
-                <div className="w-full max-w-md">
-                    <DateReserve
-                        onDateChange={setReserveDate}
-                        onLocationChange={setCoworkingId}
-                        onTimeChange={setReserveTime}
-                    />
-                </div>
+                    onChange={handleInputChange(setTelephone)}
+                />
+
                 <button
                     className="w-full bg-green-500 text-white p-3 rounded-lg hover:bg-green-600 transition duration-200"
                     onClick={handleUpdateReservation}
                 >
-                    Update Reservation
+                    Submit
                 </button>
             </div>
         </div>

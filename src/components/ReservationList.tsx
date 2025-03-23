@@ -14,33 +14,28 @@ export default function ReservationList() {
     const router = useRouter();
 
     useEffect(() => {
-        const fetchReservations = async () => {
+        const fetchData = async () => {
             if (!session?.user?.token) return;
 
             try {
-                const reservationsData = await getReservations(session.user.token, session.user._id, session.user.role);
-                setReservations(reservationsData);
-            } catch (error) {
-                console.error("Error fetching reservations:", error);
-            }
-        };
-
-        const loadCoworkings = async () => {
-            try {
+                // Load coworking spaces first
                 const coworkingData = await getCoworkings();
                 const coworkingNameMap: { [key: string]: string } = {};
                 coworkingData.data.forEach((coworking: CoworkingItem) => {
                     coworkingNameMap[coworking._id] = coworking.name;
                 });
                 setCoworkingMap(coworkingNameMap);
+                // Now load reservations
+                const reservationsData = await getReservations(session.user.token, session.user._id, session.user.role);
+                setReservations(reservationsData);
             } catch (error) {
-                console.error("Error fetching coworking details:", error);
+                console.error("Error fetching data:", error);
             }
         };
 
-        fetchReservations();
-        loadCoworkings();
+        fetchData();
     }, [session]);
+
 
     const handleEdit = (reservation: ReservationItem) => {
         router.push(
@@ -66,7 +61,11 @@ export default function ReservationList() {
             alert("Failed to delete reservation.");
         }
     };
-
+    const handleReview = (reservation: ReservationItem) => {
+        router.push(
+            `/myreservation/review?reservationId=${reservation._id}&name=${reservation.name}&telephone=${reservation.telephone}&resvTime=${reservation.resvTime}&coworking=${reservation.coworking}`
+        );
+    };
     return (
         <div className="flex flex-col items-center min-h-screen bg-gray-100 p-6">
             <h2 className="text-3xl font-bold mb-6">
@@ -81,8 +80,8 @@ export default function ReservationList() {
                             <div>
                                 <div className="text-lg font-semibold">Name: {reservationItem.name}</div>
                                 <div className="text-gray-600">Tel: {reservationItem.telephone}</div>
-                                <div className="text-gray-600">Location: {coworkingMap[reservationItem.coworking]}</div>
-                                <div className="text-gray-600">Reservation Date: {new Date(reservationItem.resvTime).toLocaleString()}</div>
+                                <div className="text-gray-600">Location: {coworkingMap[reservationItem.coworking._id] || "Loading..."}</div>
+                                <div className="text-gray-600">Reservation Date: {reservationItem.resvTime}</div>
                             </div>
                             <div>
                                 <button
@@ -97,6 +96,12 @@ export default function ReservationList() {
                                 >
                                     Remove
                                 </button>
+                                <button
+                                    onClick={() => handleReview(reservationItem)} // Redirects to /coworking
+                                    className="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-700 transition"
+                                >
+                                    Review
+                                </button>
                             </div>
                         </div>
                     ))}
@@ -105,3 +110,4 @@ export default function ReservationList() {
         </div>
     );
 }
+

@@ -8,7 +8,7 @@ import { useSearchParams } from "next/navigation";
 import makeReservation from "@/libs/makeReservation";
 
 export default function Reservation() {
-    const [reserveDate, setReserveDate] = useState<Dayjs | null>(null);
+    const [reserveDate, setReserveDate] = useState<string>("");
     const [reserveTime, setReserveTime] = useState<string>("");
     const [coworkingId, setCoworkingId] = useState<string>("");
     const [name, setName] = useState<string>("");
@@ -82,7 +82,7 @@ export default function Reservation() {
                                 onDateChange={setReserveDate}
                                 onLocationChange={setCoworkingId}
                                 onTimeChange={setReserveTime}
-                                />
+                            />
                         </div>
                     </div>
                 </div>

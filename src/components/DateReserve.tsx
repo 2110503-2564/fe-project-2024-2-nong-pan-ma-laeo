@@ -47,7 +47,7 @@ export default function DateReserve({ onDateChange, onLocationChange, onTimeChan
             <Select variant="standard" name="coworking" id="coworking" className="k-[2em] w-[200px]" value={location}
                 onChange={(e) => { setLocation(e.target.value); onLocationChange(e.target.value); }}>
                 {
-                    coworkingSpaces.map((coworking) => (
+                    coworkingSpaces.map((coworking: CoworkingItem) => (
                         <MenuItem key={coworking._id} value={coworking._id}>
                             {coworking.name}
                         </MenuItem>
