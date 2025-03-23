@@ -7,7 +7,7 @@ export default async function getReservations(token: string, userId?: string, ro
 
         const response = await fetch(endpoint, {
             headers: { Authorization: `Bearer ${token}` },
-            mode: 'no-cors'
+            mode: 'cors'
         });
 
         const data = await response.json();

@@ -14,7 +14,7 @@ export default async function makeReservation({ name, telephone, coworking, resv
             "Content-Type": "application/json",
             "Authorization": `Bearer ${token}`
         },
-        mode: 'no-cors',
+        mode: 'cors',
         body: JSON.stringify({
             name,
             telephone,

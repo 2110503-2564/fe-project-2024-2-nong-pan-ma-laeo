@@ -4,7 +4,7 @@ export default async function userRegister(userName: string, userEmail: string, 
         headers: {
             "Content-Type": "application/json",
         },
-        mode: 'no-cors',
+        mode: 'cors',
         body: JSON.stringify({
             name: userName,   // Send name to backend
             email: userEmail,
