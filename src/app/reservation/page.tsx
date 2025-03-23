@@ -1,11 +1,13 @@
 "use client";
 
+
 import DateReserve from "@/components/DateReserve";
 import TextField from "@mui/material/TextField";
 import { useEffect, useState } from "react";
 import dayjs, { Dayjs } from "dayjs";
 import { useSearchParams } from "next/navigation";
 import makeReservation from "@/libs/makeReservation";
+import { useSession } from "next-auth/react";
 
 export default function Reservation() {
     const [reserveDate, setReserveDate] = useState<string>("");
@@ -13,14 +15,22 @@ export default function Reservation() {
     const [coworkingId, setCoworkingId] = useState<string>("");
     const [name, setName] = useState<string>("");
     const [telephone, setTelephone] = useState<string>("");
-
+    const { data: session } = useSession();
     const urlParams = useSearchParams();
 
     useEffect(() => {
         const model = urlParams.get("model");
         const tel = urlParams.get("tel");
         const coworkingIdFromURL = urlParams.get("_id");
+        useEffect(() => {
+            const model = urlParams.get("model");
+            const tel = urlParams.get("tel");
+            const coworkingIdFromURL = urlParams.get("_id");
 
+            if (model) setName(model);
+            if (tel) setTelephone(tel);
+            if (coworkingIdFromURL) setCoworkingId(coworkingIdFromURL);
+        }, [urlParams]);
         if (model) setName(model);
         if (tel) setTelephone(tel);
         if (coworkingIdFromURL) setCoworkingId(coworkingIdFromURL);
@@ -37,10 +47,15 @@ export default function Reservation() {
             return;
         }
 
+
         const formattedDateTime = `${dayjs(reserveDate).format("YYYY-MM-DD")} ${reserveTime}`;
 
+
         try {
-            await makeReservation({ name, telephone, coworking: coworkingId, resvTime: formattedDateTime });
+            if (!session?.user.token) {
+                return null;
+            }
+            await makeReservation({ name, telephone, coworking: coworkingId, resvTime: formattedDateTime, token: session?.user.token });
             alert("🎉 Reservation successful!");
         } catch (error) {
             alert("Failed to make a reservation. Please try again.");
