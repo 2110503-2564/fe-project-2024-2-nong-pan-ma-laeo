@@ -80,7 +80,7 @@ export default function ReservationList() {
                             <div>
                                 <div className="text-lg font-semibold">Name: {reservationItem.name}</div>
                                 <div className="text-gray-600">Tel: {reservationItem.telephone}</div>
-                                <div className="text-gray-600">Location: {coworkingMap[reservationItem.coworking._id] || "Loading..."}</div>
+                                <div className="text-gray-600">Location: {coworkingMap[reservationItem.coworking._id]}</div>
                                 <div className="text-gray-600">Reservation Date: {reservationItem.resvTime}</div>
                             </div>
                             <div>
