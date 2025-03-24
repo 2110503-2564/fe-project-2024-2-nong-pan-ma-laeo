@@ -1,34 +1,29 @@
 "use client";
-import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import TextField from "@mui/material/TextField";
-import dayjs, { Dayjs } from "dayjs";
-import DateReserve from "@/components/DateReserve";
-import updateReservation from "@/libs/updateReservation";
+import makeReview from "@/libs/makeReview";
+import { Rating } from "@mui/material";
 
 export default function ReviewReservation() {
-    const { data: session } = useSession();
-    const [reserveDate, setReserveDate] = useState<Dayjs | null>(null);
-    const [reserveTime, setReserveTime] = useState<string>("");
+    const [rating, setRating] = useState<number>(0);
     const [coworkingId, setCoworkingId] = useState<string>("");
-    const [name, setName] = useState<string>("");
+    const [name, setName] = useState<string>("")
+    const [user, setUser] = useState<string>("");
     const [telephone, setTelephone] = useState<string>("");
-    const [reservationId, setReservationId] = useState<string>("");
+    const [review, setReview] = useState<string>("");
 
     const router = useRouter();
     const urlParams = useSearchParams();
 
     useEffect(() => {
-        const resId = urlParams.get("reservationId");
-        const model = urlParams.get("name");
-        const tel = urlParams.get("telephone");
-        const time = urlParams.get("resvTime");
+        const model = urlParams.get("user");
+        const reviews = urlParams.get("review");
         const coworkingIdFromURL = urlParams.get("coworking");
-        if (resId) setReservationId(resId);
-        if (model) setName(model);
-        if (tel) setTelephone(tel);
-        if (time) setReserveTime(time);
+        const users = urlParams.get("user")
+        if (model) setUser(model);
+        if (users) setUser(users)
+        if (reviews) setReview(reviews);
         if (coworkingIdFromURL) setCoworkingId(coworkingIdFromURL);
     }, [urlParams]);
 
@@ -38,27 +33,22 @@ export default function ReviewReservation() {
         };
 
     const handleUpdateReservation = async () => {
-        if (!reserveDate || !reserveTime || !name || !telephone || !coworkingId) {
+        if (!rating || !review || !user || !coworkingId) {
             alert("⚠️ Please fill in all fields before updating the reservation.");
             return;
         }
 
-        const formattedDateTime = `${dayjs(reserveDate).format("YYYY-MM-DD")} ${reserveTime}`;
-
-        console.log("Updating reservation with:", {
-            reservationId,
-            name,
-            telephone,
+        console.log("Review reservation with:", {
+            rating,
+            comment: review,
+            user,
             coworking: coworkingId,
-            resvTime: formattedDateTime
         });
-
         try {
-            await updateReservation(reservationId, { name, telephone, coworking: coworkingId, resvTime: formattedDateTime });
-            alert("✅ Reservation updated successfully!");
-            router.push("/myreservation"); // Redirect to My Reservations
+            await makeReview({ rating, comment: review, coworkingID: coworkingId })
+            alert("🎉 Review sucessful!");
         } catch (error) {
-            alert("❌ Failed to update reservation. Please try again.");
+            alert("Failed to make a reservation. Please try again.");
         }
     };
 
@@ -87,9 +77,10 @@ export default function ReviewReservation() {
                     variant="outlined"
                     label="Review"
 
-                    onChange={handleInputChange(setTelephone)}
+                    onChange={handleInputChange(setReview)}
                 />
-
+                <Rating className="w-full h-auto " value={(rating == undefined) ? 0 : rating}
+                    onChange={(e, newValue) => { if (newValue != null) setRating(newValue) }} />
                 <button
                     className="w-full bg-green-500 text-white p-3 rounded-lg hover:bg-green-600 transition duration-200"
                     onClick={handleUpdateReservation}

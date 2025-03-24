@@ -68,7 +68,7 @@ export default function ReservationList() {
     };
     const handleReview = (reservation: ReservationItem) => {
         router.push(
-            `/myreservation/review?reservationId=${reservation._id}&name=${reservation.name}&telephone=${reservation.telephone}&resvTime=${reservation.resvTime}&coworking=${reservation.coworking}`
+            `/myreservation/review?reservationId=${reservation._id}&user=${session?.user.id}&telephone=${reservation.telephone}&coworking=${(reservation.coworking as any)._id}`
         );
     };
     return (

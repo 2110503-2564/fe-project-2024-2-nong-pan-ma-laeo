@@ -37,3 +37,11 @@ interface User {
   role: string;
   token: string;
 }
+
+interface Review {
+  rating: number,
+  comment: string,
+  user: string,
+  coworking: string,
+  _id: string
+}
