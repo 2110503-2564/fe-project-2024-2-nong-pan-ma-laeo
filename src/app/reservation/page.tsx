@@ -7,7 +7,6 @@ import { useEffect, useState } from "react";
 import dayjs, { Dayjs } from "dayjs";
 import { useSearchParams } from "next/navigation";
 import makeReservation from "@/libs/makeReservation";
-import { useSession } from "next-auth/react";
 
 export default function Reservation() {
     const [reserveDate, setReserveDate] = useState<string>("");
@@ -15,7 +14,6 @@ export default function Reservation() {
     const [coworkingId, setCoworkingId] = useState<string>("");
     const [name, setName] = useState<string>("");
     const [telephone, setTelephone] = useState<string>("");
-    const { data: session } = useSession();
     const urlParams = useSearchParams();
 
 
@@ -45,9 +43,6 @@ export default function Reservation() {
 
 
         try {
-            if (!session?.user.token) {
-                return null;
-            }
             await makeReservation({ name, telephone, coworking: coworkingId, resvTime: formattedDateTime });
             alert("🎉 Reservation successful!");
         } catch (error) {
