@@ -87,12 +87,15 @@ export default function Reservation() {
                     <h3 className="text-lg font-semibold text-center">Reservation Details</h3>
                     <div className="w-full">
                         <div className="w-full">
+
                             <DateReserve
                                 onDateChange={setReserveDate}
                                 onLocationChange={setCoworkingId}
                                 onTimeChange={setReserveTime}
+                                
                             />
-                        </div>
+                            </div>
+                        
                     </div>
                 </div>
 
