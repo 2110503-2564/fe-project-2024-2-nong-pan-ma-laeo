@@ -30,7 +30,7 @@ export default function DateReserve({ onDateChange, onLocationChange, onTimeChan
     }, []);
 
     return (
-        <div className="bg-slate-100 rounded-lg space-x-5 space-y-2 w-fit px-10 py-5 
+        <div className="bg-slate-100 rounded-lg space-x-5 space-y-2 w-full max-w-md px-10 py-5 
         flex flex-col justify-center">
             <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker className="bg-white"
@@ -38,13 +38,13 @@ export default function DateReserve({ onDateChange, onLocationChange, onTimeChan
                     onChange={(value) => { setReserveDate(value); onDateChange(value) }} />
             </LocalizationProvider>
             <TextField
-                className="bg-white"
+                className="bg-white "
                 label="Reservation Time (HH:MM-HH:MM)"
                 variant="standard"
                 value={reserveTime}
                 onChange={(e) => { setReserveTime(e.target.value); onTimeChange(e.target.value); }}
             />
-            <Select variant="standard" name="coworking" id="coworking" className="k-[2em] w-[200px]" value={location}
+            <Select variant="standard" name="coworking" id="coworking" className="k-[2em] w-[200px] w-fit " value={location}
                 onChange={(e) => { setLocation(e.target.value); onLocationChange(e.target.value); }}>
                 {
                     coworkingSpaces.map((coworking: CoworkingItem) => (
