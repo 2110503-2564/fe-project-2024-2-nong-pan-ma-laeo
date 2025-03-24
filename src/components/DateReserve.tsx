@@ -44,9 +44,9 @@ export default function DateReserve({ onDateChange, onLocationChange, onTimeChan
                 onChange={(e) => { setReserveTime(e.target.value); onTimeChange(e.target.value); }}
             />
 
-           <Select variant="standard" name="coworking" id="coworking" className="k-[2em] w-[200px] w-full " value={location}
+            <Select variant="standard" name="coworking" id="coworking" className="k-[2em] w-[200px] w-full " value={location}
 
-        
+
                 onChange={(e) => { setLocation(e.target.value); onLocationChange(e.target.value); }}>
                 {
                     coworkingSpaces.map((coworking: CoworkingItem) => (
