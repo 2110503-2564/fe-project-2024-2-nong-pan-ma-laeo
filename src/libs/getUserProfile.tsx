@@ -1,4 +1,9 @@
-export default async function getUserProfile(token: string) {
+export default async function getUserProfile() {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+        throw new Error("No authentication token found. Please log in.");
+    }
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/me`, {
         method: "GET",
         headers: {

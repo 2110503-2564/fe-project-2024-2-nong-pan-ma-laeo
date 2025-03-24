@@ -1,5 +1,9 @@
-export default async function getReservations(token: string, userId?: string, role?: string) {
+export default async function getReservations() {
     try {
+        const token = localStorage.getItem("token");
+        if (!token) {
+            throw new Error("No authentication token found. Please log in.");
+        }
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/reservations`, {
             headers: { Authorization: `Bearer ${token}` },
         });

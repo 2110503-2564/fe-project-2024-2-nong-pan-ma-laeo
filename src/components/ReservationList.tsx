@@ -26,7 +26,7 @@ export default function ReservationList() {
                 });
                 setCoworkingMap(coworkingNameMap);
                 // Now load reservations
-                const reservationsData = await getReservations(session.user.token, session.user.id, session.user.role);
+                const reservationsData = await getReservations();
 
                 console.log("🔹 Coworking Map:", coworkingNameMap);
                 console.log("🔹 Reservations:", reservationsData);
@@ -54,7 +54,7 @@ export default function ReservationList() {
         try {
             // console.log("Deleting reservation:", reservationId); // Debugging
 
-            const success = await deleteReservation(session?.user.token!, reservationId);
+            const success = await deleteReservation(reservationId);
             if (success) {
                 alert("🚀 Reservation deleted!");
                 setReservations(reservations.filter((r) => r._id !== reservationId)); // ✅ Remove from UI

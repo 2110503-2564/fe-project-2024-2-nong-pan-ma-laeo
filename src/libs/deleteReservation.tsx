@@ -1,7 +1,11 @@
-export default async function deleteReservation(token: string, reservationId: string) {
+export default async function deleteReservation(reservationId: string) {
     try {
         // console.log("Sending DELETE request to backend for reservation:", reservationId);
+        const token = localStorage.getItem("token");
 
+        if (!token) {
+            throw new Error("No authentication token found. Please log in.");
+        }
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/reservations/${reservationId}`, {
             method: "DELETE",
             headers: {
