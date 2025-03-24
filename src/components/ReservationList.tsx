@@ -15,9 +15,14 @@ export default function ReservationList() {
 
     useEffect(() => {
         const fetchData = async () => {
-            if (!session?.user?.token) return;
+            const token = session?.user.token;
+            if (!token) {
+                return null;
+            }
+           
 
             try {
+                
                 // Load coworking spaces first
                 const coworkingData = await getCoworkings();
                 const coworkingNameMap: { [key: string]: string } = {};
@@ -26,7 +31,7 @@ export default function ReservationList() {
                 });
                 setCoworkingMap(coworkingNameMap);
                 // Now load reservations
-                const reservationsData = await getReservations();
+                const reservationsData = await getReservations(token);
 
                 console.log("🔹 Coworking Map:", coworkingNameMap);
                 console.log("🔹 Reservations:", reservationsData);
@@ -52,9 +57,11 @@ export default function ReservationList() {
         if (!confirm("Are you sure you want to delete this reservation?")) return;
 
         try {
-            // console.log("Deleting reservation:", reservationId); // Debugging
-
-            const success = await deleteReservation(reservationId);
+            const token = session?.user.token;
+            if (!token) {
+                return null;
+            }
+            const success = await deleteReservation(reservationId,token);
             if (success) {
                 alert("🚀 Reservation deleted!");
                 setReservations(reservations.filter((r) => r._id !== reservationId)); // ✅ Remove from UI

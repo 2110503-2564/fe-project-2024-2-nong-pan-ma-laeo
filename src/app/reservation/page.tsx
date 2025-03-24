@@ -1,6 +1,6 @@
 "use client";
 
-
+import { useSession } from "next-auth/react";
 import DateReserve from "@/components/DateReserve";
 import TextField from "@mui/material/TextField";
 import { useEffect, useState } from "react";
@@ -16,7 +16,7 @@ export default function Reservation() {
     const [name, setName] = useState<string>("");
     const [telephone, setTelephone] = useState<string>("");
     const urlParams = useSearchParams();
-
+  const { data: session } = useSession();
 
     useEffect(() => {
         const model = urlParams.get("model");
@@ -44,11 +44,16 @@ export default function Reservation() {
 
 
         try {
-            await makeReservation({ name, telephone, coworking: coworkingId, resvTime: formattedDateTime });
+            if(!session?.user.token){
+                return null;
+            }
+            await makeReservation({ name, telephone, coworking: coworkingId, resvTime: formattedDateTime ,token:session?.user.token});
             alert("🎉 Reservation successful!");
         } catch (error) {
+            console.log(session?.user.token);
             alert("Failed to make a reservation. Please try again.");
         }
+
     };
 
     return (
@@ -80,8 +85,8 @@ export default function Reservation() {
                 {/* Reservation Details */}
                 <div className="space-y-4">
                     <h3 className="text-lg font-semibold text-center">Reservation Details</h3>
-                    <div className="w-full flex flex-col items-center">
-                        <div className="w-full max-w-md">
+                    <div className="w-full">
+                        <div className="w-full">
                             <DateReserve
                                 onDateChange={setReserveDate}
                                 onLocationChange={setCoworkingId}

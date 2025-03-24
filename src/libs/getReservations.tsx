@@ -1,6 +1,6 @@
-export default async function getReservations() {
+export default async function getReservations(token:string) {
     try {
-        const token = localStorage.getItem("token");
+       
         if (!token) {
             throw new Error("No authentication token found. Please log in.");
         }

@@ -1,4 +1,5 @@
 "use client";
+
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -54,7 +55,12 @@ export default function EditReservation() {
         });
 
         try {
-            await updateReservation(reservationId, { name, telephone, coworking: coworkingId, resvTime: formattedDateTime });
+            const token = session?.user.token;
+            if (!token) {
+                return null;
+            }
+        
+            await updateReservation(reservationId, { name, telephone, coworking: coworkingId, resvTime: formattedDateTime },token );
             alert("✅ Reservation updated successfully!");
             router.push("/myreservation"); // Redirect to My Reservations
         } catch (error) {

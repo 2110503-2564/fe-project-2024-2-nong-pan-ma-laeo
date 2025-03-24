@@ -1,4 +1,5 @@
 "use client";
+import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import TextField from "@mui/material/TextField";
@@ -12,6 +13,7 @@ export default function ReviewReservation() {
     const [user, setUser] = useState<string>("");
     const [telephone, setTelephone] = useState<string>("");
     const [review, setReview] = useState<string>("");
+    const { data: session } = useSession();
 
     const router = useRouter();
     const urlParams = useSearchParams();
@@ -45,7 +47,10 @@ export default function ReviewReservation() {
             coworking: coworkingId,
         });
         try {
-            await makeReview({ rating, comment: review, coworkingID: coworkingId })
+            if(!session?.user.token){
+                return null;
+            }
+            await makeReview({ rating, comment: review, coworkingID: coworkingId ,token:session?.user.token})
             alert("🎉 Review sucessful!");
         } catch (error) {
             alert("Failed to make a reservation. Please try again.");

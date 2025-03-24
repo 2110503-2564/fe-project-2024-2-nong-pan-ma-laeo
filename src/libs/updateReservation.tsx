@@ -1,6 +1,5 @@
-export default async function updateReservation(reservationId: string, updatedData: Partial<ReservationItem>) {
-    const token = localStorage.getItem("token");
-
+export default async function updateReservation(reservationId: string, updatedData: Partial<ReservationItem>,token:string) {
+   
     if (!token) {
         throw new Error("No authentication token found. Please log in.");
     }

@@ -1,7 +1,7 @@
-export default async function makeReservation({ name, telephone, coworking, resvTime }
-    : { name: string, telephone: string, coworking: string, resvTime: string }) {
+export default async function makeReservation({ name, telephone, coworking, resvTime,token}
+    : { name: string, telephone: string, coworking: string, resvTime: string,token:string}) {
     console.log("Sending Reservation Data:", { name, telephone, coworking, resvTime });
-    const token = localStorage.getItem("token");
+    
 
     if (!token) {
         throw new Error("No authentication token found. Please log in.");

@@ -1,7 +1,6 @@
-export default async function makeReview({ rating, comment, coworkingID }
-    : { rating: number, comment: string, coworkingID: string }) {
+export default async function makeReview({ rating, comment, coworkingID,token }
+    : { rating: number, comment: string, coworkingID: string ,token:string}) {
     console.log("Sending Review Data:", { rating, comment });
-    const token = localStorage.getItem("token");
 
     if (!token) {
         throw new Error("No authentication token found. Please log in.");
