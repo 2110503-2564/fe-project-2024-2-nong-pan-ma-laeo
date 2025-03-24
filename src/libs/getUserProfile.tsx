@@ -4,7 +4,7 @@ export default async function getUserProfile(token: string) {
         headers: {
             authorization: `Bearer ${token}`,
         },
-        mode: 'no-cors'
+
     })
     if (!response.ok) {
         throw new Error("Failed to fetch user Profile")
