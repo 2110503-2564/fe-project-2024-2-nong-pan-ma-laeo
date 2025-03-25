@@ -63,5 +63,8 @@ export const authOptions: AuthOptions = {
             };
             return session;
         },
+        async redirect({ url, baseUrl }) {
+            return "https://coworkings.vercel.app/"; // Force redirect after login
+        }
     }
 };
