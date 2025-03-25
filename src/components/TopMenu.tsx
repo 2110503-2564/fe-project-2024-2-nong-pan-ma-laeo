@@ -14,7 +14,7 @@ export default async function TopMenu() {
             <div className="flex items-center">
 
                 {
-                    session ? <Link href="/api/auth/signout?callbackUrl=http://localhost:3000/"><div className='text-cyan-600 text-sm px-10'>Sign-Out</div></Link>
+                    session ? <Link href="/api/auth/signout?callbackUrl=https://coworkings.vercel.app/"><div className='text-cyan-600 text-sm px-10'>Sign-Out</div></Link>
                         : <Link href="/api/auth/signin"><div className='text-cyan-600 text-sm px-10'>Sign-In</div></Link>
                 }
             </div>
